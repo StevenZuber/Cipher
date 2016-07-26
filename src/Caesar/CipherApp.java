@@ -5,40 +5,54 @@ import java.util.Scanner;
 public class CipherApp {
 	public static void main(String[] args) {
 		Cipher cipher = new Cipher();
-		int entry = -1;
 		String message = "";
-		int shift = 0;
+		int shift = -1;
+		boolean run = true;
 		
 		Scanner keyboard = new Scanner(System.in);
-
+		do {
+			switch (menu(keyboard)) {
+			case 0:
+				message = promptForMsg(keyboard, "Please enter the message you'd like to encrypt: ");
+				shift = promptForShift(keyboard, "Enter your shift amount: ");
+				cipher.crypt(message, shift, "En");
+				break;
+			case 1:
+				message = promptForMsg(keyboard, "Please enter the message you'd like to decrypt: ");
+				shift = promptForShift(keyboard, "Enter the shift amount that was used to encrypt: ");
+				cipher.crypt(message, -shift, "De");
+			default:
+				System.out.println("Goodbye.");
+				run = false;
+				break;
+			}
+		} while (run);
+	}
+	
+	public static int menu(Scanner sc) {
+		int choice = -1;
 		System.out.println("\tCAESAR CIPHER");
 		System.out.println("\t_____________");
 		System.out.println();
 		System.out.println("Encryption or Decryption");
 		System.out.println();
-		System.out.println("0 for Encryption");
-		System.out.println("1 for Decryption");
-		entry = keyboard.nextInt();
-		keyboard.nextLine();
-		
-		if (entry == 0){
-			System.out.println("Please enter the message you'd like to encrypt: ");
-			System.out.println();
-			message = keyboard.nextLine();
-			System.out.println("Enter your shift amount: ");
-			shift = keyboard.nextInt();
-
-			cipher.encrypt(message, shift);
-//			System.out.println(cipher.getEncryptedMessage());
-		}
-		if (entry == 1){
-			System.out.println("Please enter the message you'd like to decrypt: ");
-			System.out.println();
-			message = keyboard.nextLine();
-			System.out.println("Enter the shift amount: ");
-			shift = keyboard.nextInt();
-			cipher.decrypt(message, shift);
-		}
-		
+		System.out.println("Enter 0 for Encryption");
+		System.out.println("Enter 1 for Decryption");
+		System.out.println("Any other key to quit.");
+		System.out.print("Your choice: ");
+		choice = Integer.parseInt(sc.nextLine());
+		return choice;
+	}
+	
+	public static String promptForMsg(Scanner sc, String str) {
+		System.out.print(str);
+		return sc.nextLine();
+	}
+	
+	public static int promptForShift(Scanner sc, String str) {
+		int shift = 0;
+		System.out.print(str);
+		shift = Integer.parseInt(sc.nextLine());
+		return shift;
 	}
 }
